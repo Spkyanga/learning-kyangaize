@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ha">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#176b52">
+<meta name="description" content="Koyi Kyanganci tare da Hausa da Turanci.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+<title>Learning Kyangaize</title>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="logo">K</div><div><strong>Learning Kyangaize</strong><small>Koyi kalma ɗaya a rana</small></div></div>
+  <button id="themeBtn" class="iconbtn" aria-label="Canza yanayin allo">☾</button>
+</header>
+<main>
+  <section id="dashboard" class="page active">
+    <div class="welcome">
+      <p class="eyebrow">BARKA DA ZUWA</p>
+      <h1>Ka fara koyon<br><span>Kyanganci.</span></h1>
+      <p>Ka koyi kalmomi da jimlolin da aka tabbatar, a hankali-a-hankali.</p>
+      <button class="primary" data-go="lessons">Fara darasi <span>→</span></button>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="staticon">📚</span><strong id="wordCount">0</strong><small>Kalmomi da jimloli</small></div>
+      <div class="stat"><span class="staticon">♡</span><strong id="favCount">0</strong><small>Abubuwan da ka so</small></div>
+    </div>
+    <div class="sectionhead"><h2>Ci gaba da koyo</h2><span class="pill">Mataki na 1</span></div>
+    <button class="lesson-card" data-go="lessons"><span class="lesson-icon">🔢</span><span class="lesson-copy"><strong>Lambobi 1–20</strong><small>Koyi lambobin Kyanganci</small><span class="progress"><i></i></span></span><span>›</span></button>
+    <div class="sectionhead"><h2>Kalmomin yau</h2><button class="textbtn" data-go="dictionary">Duba duka</button></div>
+    <div id="dailyWord" class="word-card"></div>
+    <div class="note">⚠️ Wannan sigar gwaji ce. Za a ƙara sabbin kalmomi ne kawai bayan an tabbatar da su.</div>
+  </section>
+
+  <section id="dictionary" class="page">
+    <p class="eyebrow">ƘAMUS</p><h1>Bincika kalmomi</h1>
+    <p class="muted">Bincika Hausa, Turanci ko Kyanganci.</p>
+    <div class="searchbox"><span>⌕</span><input id="searchInput" placeholder="Rubuta kalma..." autocomplete="off"><button id="clearSearch" aria-label="Share bincike">×</button></div>
+    <div class="filters"><button class="filter active" data-filter="all">Duka</button><button class="filter" data-filter="number">Lambobi</button><button class="filter" data-filter="phrase">Jimloli</button><button class="filter" data-filter="basic">Kalmomi</button></div>
+    <div id="dictionaryList" class="word-list"></div>
+    <p id="emptyState" class="empty hidden">Ba a sami kalma ba. Gwada wata kalma.</p>
+  </section>
+
+  <section id="lessons" class="page">
+    <p class="eyebrow">DARUSSA</p><h1>Zaɓi darasi</h1>
+    <p class="muted">Fara da lambobi, sannan ka ƙara sauran darussa yayin da ake tabbatar da kalmomi.</p>
+    <button class="course-card" id="numbersLesson"><span class="course-art">🔢</span><span class="course-info"><strong>Lambobi 1 zuwa 20</strong><small>Darasi na farko · 20 kalmomi</small><span class="pill free">Kyauta</span></span><span>→</span></button>
+    <button class="course-card locked" id="premiumCourse"><span class="course-art">✦</span><span class="course-info"><strong>Darussa na Premium</strong><small>Buɗe ƙarin darussa da ₦500/shekara</small><span class="pill premium">Premium</span></span><span>🔒</span></button>
+    <div class="note">Biyan kuɗi na gaske bai kunna a wannan samfurin ba. Ana buƙatar backend da tabbatar da Paystack kafin a karɓi kuɗi ko buɗe Premium.</div>
+  </section>
+
+  <section id="favorites" class="page">
+    <p class="eyebrow">ABUBUWAN DA KA SO</p><h1>Favorites</h1>
+    <p class="muted">Kalmomi da ka adana domin sake dubawa.</p>
+    <div id="favoritesList" class="word-list"></div>
+    <p id="favoritesEmpty" class="empty">Ba ka adana komai ba tukuna. Danna ♡ kusa da kalma domin adana ta.</p>
+  </section>
+
+  <section id="settings" class="page">
+    <p class="eyebrow">SAITI</p><h1>Saitunan app</h1>
+    <div class="setting-row"><span><strong>Yanayin duhu</strong><small>Rage hasken allo</small></span><button id="themeToggle" class="switch" aria-label="Canza yanayin duhu"><span></span></button></div>
+    <div class="setting-row"><span><strong>Ajiyar bayanai</strong><small>Ana ajiye favorites da saiti a wannan wayar</small></span><span class="pill">A kunne</span></div>
+    <div class="setting-row"><span><strong>Tsarin Premium</strong><small>₦500 na watanni 12</small></span><button class="outline" id="subscribeBtn">Bayani</button></div>
+    <div class="note">Kalmomin Kyanganci a cikin wannan sigar sun dogara ne da bayanan da aka bayar. Ma'anar da ba a tabbatar ba ba za a ƙirƙira ba.</div>
+    <p class="version">Learning Kyangaize · Sigar gwaji 0.1</p>
+  </section>
+
+  <section id="numberLesson" class="page">
+    <button class="backbtn" data-go="lessons">← Komawa darussa</button>
+    <p class="eyebrow">DARASI NA FARKO</p><h1>Lambobi 1–20</h1>
+    <p class="muted">Danna katin don matsawa zuwa lamba ta gaba.</p>
+    <div class="flashcard" id="flashcard"><small id="numberIndex">LAMBA 1 / 20</small><div id="kyangaWord" class="bigword">Duu</div><div id="hausaWord" class="translation">1 — Ɗaya</div><button class="primary" id="nextNumber">Na gaba →</button></div>
+    <div class="lesson-controls"><button id="prevNumber" class="outline">← Baya</button><button id="restartNumbers" class="outline">Fara daga farko</button></div>
+    <div class="note">Lura: An rubuta kalmomin Kyanganci kamar yadda aka bayar. Ba a ƙara furuci ko ma'ana da ba a tabbatar ba.</div>
+  </section>
+</main>
+<nav class="bottomnav">
+  <button class="navitem active" data-go="dashboard"><span>⌂</span><small>Gida</small></button>
+  <button class="navitem" data-go="dictionary"><span>⌕</span><small>Ƙamus</small></button>
+  <button class="navitem" data-go="lessons"><span>▤</span><small>Darussa</small></button>
+  <button class="navitem" data-go="favorites"><span>♡</span><small>Favorites</small></button>
+  <button class="navitem" data-go="settings"><span>⚙</span><small>Saiti</small></button>
+</nav>
+<div id="toast" role="status" class="toast"></div>
+<dialog id="premiumDialog"><div class="dialogtop"><span class="logo">K</span><button id="closeDialog" class="iconbtn">×</button></div><p class="eyebrow">LEARNING KYANGAIZE PREMIUM</p><h2>Ƙara iliminka</h2><p>₦500 na watanni 12</p><ul><li>Ƙarin darussa da aka tabbatar</li><li>Sabbin jimloli da kalmomi</li><li>Ci gaba da koyo a hankali</li></ul><p class="muted">Biyan kuɗi bai kunna ba tukuna. Kada ka tura kuɗi ta wannan samfurin.</p><button id="dialogOk" class="primary full">Na gane</button></dialog>
+<script src="app.js"></script>
+</body>
+</html>
