@@ -16,6 +16,30 @@
   <button id="themeBtn" class="iconbtn" aria-label="Canza yanayin allo">☾</button>
 </header>
 <main>
+  <section id="authPanel" class="auth-panel">
+    <p class="eyebrow">ASUSUN KA</p>
+    <h2>Shiga Learning Kyangaize</h2>
+    <p class="muted">Ƙirƙiri sabon asusu ko shiga asusunka domin ci gaba da koyo.</p>
+
+    <div class="auth-tabs">
+      <button type="button" id="showLogin" class="primary">Login</button>
+      <button type="button" id="showSignup" class="outline">Sign up</button>
+    </div>
+
+    <form id="authForm">
+      <label for="authEmail">Adireshin imel</label>
+      <input id="authEmail" type="email" placeholder="misali@gmail.com" required autocomplete="email">
+
+      <label for="authPassword">Kalmar sirri</label>
+      <input id="authPassword" type="password" placeholder="Aƙalla haruffa 6" minlength="6" required autocomplete="current-password">
+
+      <button type="submit" id="authSubmit" class="primary full">Login</button>
+    </form>
+
+    <p id="authMessage" role="status" aria-live="polite"></p>
+    <button type="button" id="signOutBtn" class="outline hidden">Fita daga asusu</button>
+  </section>
+</main>
   <section id="dashboard" class="page active">
     <div class="welcome">
       <p class="eyebrow">BARKA DA ZUWA</p>
