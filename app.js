@@ -67,3 +67,103 @@ $("premiumCourse").onclick=openPremium;$("subscribeBtn").onclick=openPremium;$("
 if(localStorage.getItem("lk-dark")==="true")document.body.classList.add("dark");
 updateThemeButtons();renderAll();renderNumber();
 if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+
+/* Supabase Authentication */
+(() => {
+  const client = window.supabase;
+  const url = window.SUPABASE_URL;
+  const key = window.SUPABASE_PUBLISHABLE_KEY;
+
+  const form = document.getElementById("authForm");
+  const emailInput = document.getElementById("authEmail");
+  const passwordInput = document.getElementById("authPassword");
+  const message = document.getElementById("authMessage");
+  const submit = document.getElementById("authSubmit");
+  const loginBtn = document.getElementById("showLogin");
+  const signupBtn = document.getElementById("showSignup");
+  const signOutBtn = document.getElementById("signOutBtn");
+
+  if (!form || !client || !url || !key) {
+    if (message) {
+      message.textContent =
+        "Ba a sami saitunan Supabase ba. Duba supabase-config.js.";
+    }
+    return;
+  }
+
+  const db = client.createClient(url, key);
+  let mode = "login";
+
+  function say(text) {
+    message.textContent = text;
+  }
+
+  function setMode(nextMode) {
+    mode = nextMode;
+    submit.textContent = mode === "login" ? "Login" : "Ƙirƙiri asusu";
+    passwordInput.autocomplete =
+      mode === "login" ? "current-password" : "new-password";
+    say("");
+  }
+
+  loginBtn.addEventListener("click", () => setMode("login"));
+  signupBtn.addEventListener("click", () => setMode("signup"));
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    submit.disabled = true;
+    say("Ana jira...");
+
+    try {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (mode === "signup") {
+        const { error } = await db.auth.signUp({ email, password });
+        if (error) throw error;
+
+        say("An aika maka imel na tabbatarwa idan an kunna email confirmation.");
+      } else {
+        const { error } = await db.auth.signInWithPassword({
+          email,
+          password
+        });
+        if (error) throw error;
+
+        say("Ka shiga asusunka cikin nasara.");
+      }
+
+      await updateAuthState();
+    } catch (error) {
+      say(error.message || "An samu matsala. Ka sake gwadawa.");
+    } finally {
+      submit.disabled = false;
+    }
+  });
+
+  async function updateAuthState() {
+    const { data } = await db.auth.getSession();
+    const user = data.session?.user;
+
+    signOutBtn.classList.toggle("hidden", !user);
+    if (user) {
+      say("An shiga: " + user.email);
+    }
+  }
+
+  signOutBtn.addEventListener("click", async () => {
+    const { error } = await db.auth.signOut();
+    if (error) {
+      say(error.message);
+      return;
+    }
+    say("Ka fita daga asusunka.");
+    await updateAuthState();
+  });
+
+  db.auth.onAuthStateChange(() => {
+    updateAuthState();
+  });
+
+  updateAuthState();
+})();
