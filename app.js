@@ -76,6 +76,7 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigato
 
   const form = document.getElementById("authForm");
  console.log("AUTH CODE STARTED");
+alert("Gwajin app.js: lambar tana aiki!");
   const emailInput = document.getElementById("authEmail");
   const passwordInput = document.getElementById("authPassword");
   const message = document.getElementById("authMessage");
