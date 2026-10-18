@@ -167,3 +167,8 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigato
 
   updateAuthState();
 })();
+console.log("Learning Kyangaize app.js loaded");
+console.log("Supabase SDK:", typeof window.supabase);
+console.log("Supabase URL:", window.SUPABASE_URL ? "Found" : "Missing");
+console.log("Supabase key:", window.SUPABASE_PUBLISHABLE_KEY ? "Found" : "Missing");
+console.log("Signup form:", document.getElementById("authForm") ? "Found" : "Missing");
