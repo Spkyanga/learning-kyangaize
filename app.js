@@ -75,6 +75,7 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigato
   const key = window.SUPABASE_PUBLISHABLE_KEY;
 
   const form = document.getElementById("authForm");
+ console.log("AUTH CODE STARTED");
   const emailInput = document.getElementById("authEmail");
   const passwordInput = document.getElementById("authPassword");
   const message = document.getElementById("authMessage");
