@@ -85,6 +85,12 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigato
   const signOutBtn = document.getElementById("signOutBtn");
 
   if (!form || !client || !url || !key) {
+   alert(
+  "Gwaji: form=" + !!form +
+  ", SDK=" + !!client +
+  ", URL=" + !!url +
+  ", key=" + !!key
+);
     if (message) {
       message.textContent =
         "Ba a sami saitunan Supabase ba. Duba supabase-config.js.";
