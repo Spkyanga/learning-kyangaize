@@ -99,6 +99,9 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigato
   }
 
   const db = client.createClient(url, key);
+ signupBtn.addEventListener("click", function () {
+  message.textContent = "An danna Sign up kuma JavaScript ya karɓi dannawar.";
+});
   let mode = "login";
 
   function say(text) {
