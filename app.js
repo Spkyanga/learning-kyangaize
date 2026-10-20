@@ -113,8 +113,19 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigato
     say("");
   }
 
-  loginBtn.addEventListener("click", () => setMode("login"));
-  signupBtn.addEventListener("click", () => setMode("signup"));
+  loginBtn.onclick = function () {
+  mode = "login";
+  submit.textContent = "Login";
+  passwordInput.autocomplete = "current-password";
+  say("");
+};
+
+signupBtn.onclick = function () {
+  mode = "signup";
+  submit.textContent = "Ƙirƙiri asusu";
+  passwordInput.autocomplete = "new-password";
+  say("Ka cika imel da kalmar sirri, sannan ka danna Ƙirƙiri asusu.");
+};
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
