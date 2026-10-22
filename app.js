@@ -62,12 +62,20 @@ $("numbersLesson").onclick=()=>{numberIndex=0;renderNumber();showPage("numberLes
 $("nextNumber").onclick=()=>{numberIndex=numberIndex===numbers.length-1?0:numberIndex+1;renderNumber()};
 $("prevNumber").onclick=()=>{numberIndex=Math.max(0,numberIndex-1);renderNumber()};
 $("restartNumbers").onclick=()=>{numberIndex=0;renderNumber()};
-function openPremium(){ $("premiumDialog").showModal() }
-$("premiumCourse").onclick=openPremium;$("subscribeBtn").onclick=openPremium;$("closeDialog").onclick=()=>$("premiumDialog").close();$("dialogOk").onclick=()=>$("premiumDialog").close();
-if(localStorage.getItem("lk-dark")==="true")document.body.classList.add("dark");
-updateThemeButtons();renderAll();renderNumber();
-if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+function openPremium() {
+  const dialog = document.getElementById("premiumDialog");
 
+  if (!dialog) {
+    console.error("Premium dialog not found in HTML.");
+    return;
+  }
+
+  if (typeof dialog.showModal === "function") {
+    dialog.showModal();
+  } else {
+    console.error("Your browser does not support HTML dialog.");
+  }
+}
 /* Supabase Authentication */
 (() => {
   const client = window.supabase;
