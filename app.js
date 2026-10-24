@@ -171,6 +171,64 @@ signupBtn.onclick = function () {
   });
 
   async function updateAuthState() {
+   
+  // Paystack Premium payment
+  const payPremiumBtn = document.getElementById("payPremiumBtn");
+  const paymentMessage = document.getElementById("paymentMessage");
+
+  if (payPremiumBtn) {
+    payPremiumBtn.addEventListener("click", async () => {
+      payPremiumBtn.disabled = true;
+
+      try {
+        if (paymentMessage) {
+          paymentMessage.textContent = "Ana shirya biyan kuɗi...";
+        }
+
+        const { data: sessionData, error: sessionError } =
+          await db.auth.getSession();
+
+        if (sessionError) throw sessionError;
+
+        if (!sessionData.session) {
+          if (paymentMessage) {
+            paymentMessage.textContent =
+              "Da fatan za ka shiga asusunka kafin biyan kuɗi.";
+          }
+          return;
+        }
+
+        const { data, error } = await db.functions.invoke(
+          "initialize-payment",
+          { body: {} }
+        );
+
+        if (error) throw error;
+
+        if (
+          !data ||
+          typeof data.authorization_url !== "string" ||
+          !data.authorization_url.startsWith("https://checkout.paystack.com/")
+        ) {
+          throw new Error(
+            data?.error || "Ba a samu hanyar biyan kuɗi ba."
+          );
+        }
+
+        window.location.assign(data.authorization_url);
+      } catch (error) {
+        console.error("Premium payment error:", error);
+
+        if (paymentMessage) {
+          paymentMessage.textContent =
+            error.message || "An samu matsala. A sake gwadawa.";
+        }
+      } finally {
+        payPremiumBtn.disabled = false;
+      }
+    });
+  }
+   
     const { data } = await db.auth.getSession();
     const user = data.session?.user;
 
