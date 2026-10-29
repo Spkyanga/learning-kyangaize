@@ -199,7 +199,7 @@ signupBtn.onclick = function () {
         }
 
         const { data, error } = await db.functions.invoke(
-          "initialize-payment",
+          "initialize-paystack",
           { body: {} }
         );
 
