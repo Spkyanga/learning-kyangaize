@@ -46,7 +46,29 @@ function renderDictionary(){const q=$("searchInput").value.trim().toLowerCase();
 function renderFavorites(){const favs=data.filter(x=>getFavs().includes(x.id));$("favoritesList").innerHTML=favs.map(card).join("");$("favoritesEmpty").classList.toggle("hidden",favs.length>0)}
 function renderDashboard(){$("wordCount").textContent=data.length;$("favCount").textContent=getFavs().length;const item=phrases[0];$("dailyWord").innerHTML=`<div class="wordmeta"><div><div class="word">${escapeHtml(item.ky)}</div><div class="meaning">${escapeHtml(item.ha)}</div></div><button class="heart ${isFav(item.id)?"saved":""}" data-fav="${item.id}">${isFav(item.id)?"♥":"♡"}</button></div>`}
 function renderAll(){renderDictionary();renderFavorites();renderDashboard()}
-function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".navitem").forEach(b=>b.classList.toggle("active",b.dataset.go===id));window.scrollTo({top:0,behavior:"smooth"})}
+function showPage(id) {
+  const target = document.getElementById(id);
+
+  if (!target) {
+    console.error("Page not found:", id);
+    return;
+  }
+
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.remove("active");
+  });
+
+  target.classList.add("active");
+
+  document.querySelectorAll(".navitem").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.go === id
+    );
+  });
+
+  window.scrollTo(0, 0);
+}{document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".navitem").forEach(b=>b.classList.toggle("active",b.dataset.go===id));window.scrollTo({top:0,behavior:"smooth"})}
 function renderNumber(){const n=numbers[numberIndex];$("numberIndex").textContent=`LAMBA ${numberIndex+1} / ${numbers.length}`;$("kyangaWord").textContent=n.ky;$("hausaWord").textContent=n.ha;$("prevNumber").disabled=numberIndex===0;$("prevNumber").style.opacity=numberIndex===0?".45":"1";$("nextNumber").textContent=numberIndex===numbers.length-1?"Sake farawa ↻":"Na gaba →"}
 document.addEventListener("click",e=>{
  const go=e.target.closest("[data-go]");if(go)showPage(go.dataset.go);
