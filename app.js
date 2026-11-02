@@ -68,7 +68,6 @@ function showPage(id) {
   });
 
   window.scrollTo(0, 0);
-}{document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".navitem").forEach(b=>b.classList.toggle("active",b.dataset.go===id));window.scrollTo({top:0,behavior:"smooth"})}
 function renderNumber(){const n=numbers[numberIndex];$("numberIndex").textContent=`LAMBA ${numberIndex+1} / ${numbers.length}`;$("kyangaWord").textContent=n.ky;$("hausaWord").textContent=n.ha;$("prevNumber").disabled=numberIndex===0;$("prevNumber").style.opacity=numberIndex===0?".45":"1";$("nextNumber").textContent=numberIndex===numbers.length-1?"Sake farawa ↻":"Na gaba →"}
 document.addEventListener("click",e=>{
  const go=e.target.closest("[data-go]");if(go)showPage(go.dataset.go);
