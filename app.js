@@ -47,8 +47,6 @@ function renderFavorites(){const favs=data.filter(x=>getFavs().includes(x.id));$
 function renderDashboard(){$("wordCount").textContent=data.length;$("favCount").textContent=getFavs().length;const item=phrases[0];$("dailyWord").innerHTML=`<div class="wordmeta"><div><div class="word">${escapeHtml(item.ky)}</div><div class="meaning">${escapeHtml(item.ha)}</div></div><button class="heart ${isFav(item.id)?"saved":""}" data-fav="${item.id}">${isFav(item.id)?"♥":"♡"}</button></div>`}
 function renderAll(){renderDictionary();renderFavorites();renderDashboard()}
 function showPage(id) {
-  const target = document.getElementById(id);
-
   if (!target) {
     console.error("Page not found:", id);
     return;
