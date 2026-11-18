@@ -32,110 +32,272 @@ const basic = [
 { id:"b10",ky:"Idibi",ha:"Ɗan’uwa",en:"Sibling (mapping not independently verified)",type:"basic",category:"Kalmomi"},
 { id:"b11",ky:"halme",ha:"Yar’uwa",en:"Sister (mapping not independently verified)",type:"basic",category:"Kalmomi"}
 ];
-const data=[...numbers,...phrases,...basic];
-const $=id=>document.getElementById(id);
-let filter="all",numberIndex=0;
-const getFavs=()=>{try{return JSON.parse(localStorage.getItem("lk-favs")||"[]")}catch{return []}};
-const setFavs=a=>localStorage.setItem("lk-favs",JSON.stringify(a));
-const isFav=id=>getFavs().includes(id);
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function toast(s){const t=$("toast");t.textContent=s;t.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove("show"),2200)}
-function toggleFav(id){let a=getFavs();a=a.includes(id)?a.filter(x=>x!==id):[...a,id];setFavs(a);renderAll();toast(a.includes(id)?"An adana kalmar a Favorites":"An cire kalmar daga Favorites")}
-function card(item){return `<article class="word-row"><div class="word-main"><strong>${escapeHtml(item.ky)}</strong><small>${escapeHtml(item.ha)}<br>${escapeHtml(item.en)}</small></div><span class="tag">${escapeHtml(item.category)}</span><button class="heart ${isFav(item.id)?"saved":""}" data-fav="${item.id}" aria-label="Adana ${escapeHtml(item.ky)}">${isFav(item.id)?"♥":"♡"}</button></article>`}
-function renderDictionary(){const q=$("searchInput").value.trim().toLowerCase();const filtered=data.filter(x=>(filter==="all"||x.type===filter)&&(!q||[x.ky,x.ha,x.en].some(s=>s.toLowerCase().includes(q))));$("dictionaryList").innerHTML=filtered.map(card).join("");$("emptyState").classList.toggle("hidden",filtered.length>0)}
-function renderFavorites(){const favs=data.filter(x=>getFavs().includes(x.id));$("favoritesList").innerHTML=favs.map(card).join("");$("favoritesEmpty").classList.toggle("hidden",favs.length>0)}
-function renderDashboard(){$("wordCount").textContent=data.length;$("favCount").textContent=getFavs().length;const item=phrases[0];$("dailyWord").innerHTML=`<div class="wordmeta"><div><div class="word">${escapeHtml(item.ky)}</div><div class="meaning">${escapeHtml(item.ha)}</div></div><button class="heart ${isFav(item.id)?"saved":""}" data-fav="${item.id}">${isFav(item.id)?"♥":"♡"}</button></div>`}
-function renderAll(){renderDictionary();renderFavorites();renderDashboard()}
+
+  
+const data = [...numbers, ...phrases, ...basic];
+const $ = id => document.getElementById(id);
+
+let filter = "all";
+let numberIndex = 0;
+let mode = "login";
+
+const getFavs = () => {
+  try {
+    return JSON.parse(localStorage.getItem("lk-favs") || "[]");
+  } catch {
+    return [];
+  }
+};
+
+const setFavs = a =>
+  localStorage.setItem("lk-favs", JSON.stringify(a));
+
+const isFav = id => getFavs().includes(id);
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+function toast(s) {
+  const t = $("toast");
+  if (!t) return;
+  t.textContent = s;
+  t.classList.add("show");
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(
+    () => t.classList.remove("show"), 2200
+  );
+}
+
+function toggleFav(id) {
+  let a = getFavs();
+  a = a.includes(id)
+    ? a.filter(x => x !== id)
+    : [...a, id];
+  setFavs(a);
+  renderAll();
+  toast("An sabunta Favorites");
+}
+
+function card(item) {
+  return `<article class="word-row">
+    <div class="word-main">
+      <strong>${escapeHtml(item.ky)}</strong>
+      <small>${escapeHtml(item.ha)}<br>${escapeHtml(item.en)}</small>
+    </div>
+    <span class="tag">${escapeHtml(item.category)}</span>
+    <button class="heart ${isFav(item.id) ? "saved" : ""}"
+      data-fav="${item.id}">${isFav(item.id) ? "♥" : "♡"}</button>
+  </article>`;
+}
+
+function renderDictionary() {
+  const q = $("searchInput").value.trim().toLowerCase();
+
+  const filtered = data.filter(x =>
+    (filter === "all" || x.type === filter) &&
+    (!q || [x.ky, x.ha, x.en].some(
+      s => s.toLowerCase().includes(q)
+    ))
+  );
+
+  $("dictionaryList").innerHTML = filtered.map(card).join("");
+  $("emptyState").classList.toggle("hidden", filtered.length > 0);
+}
+
+function renderFavorites() {
+  const favs = data.filter(x => getFavs().includes(x.id));
+  $("favoritesList").innerHTML = favs.map(card).join("");
+  $("favoritesEmpty").classList.toggle("hidden", favs.length > 0);
+}
+
+function renderDashboard() {
+  $("wordCount").textContent = data.length;
+  $("favCount").textContent = getFavs().length;
+
+  const item = phrases[0];
+
+  $("dailyWord").innerHTML = `
+    <div class="wordmeta">
+      <div>
+        <div class="word">${escapeHtml(item.ky)}</div>
+        <div class="meaning">${escapeHtml(item.ha)}</div>
+      </div>
+      <button class="heart ${isFav(item.id) ? "saved" : ""}"
+        data-fav="${item.id}">
+        ${isFav(item.id) ? "♥" : "♡"}
+      </button>
+    </div>`;
+}
+
+function renderAll() {
+  renderDictionary();
+  renderFavorites();
+  renderDashboard();
+}
 
 function showPage(id) {
-  const target = document.getElementById(id);
-
+  const target = $(id);
   if (!target) {
     console.error("Page not found:", id);
     return;
   }
 
-  document.querySelectorAll(".page").forEach(page => {
-    page.classList.remove("active");
-  });
+  document.querySelectorAll(".page").forEach(page =>
+    page.classList.remove("active")
+  );
 
   target.classList.add("active");
 
-  document.querySelectorAll(".navitem").forEach(button => {
-    button.classList.toggle(
-      "active",
-      button.dataset.go === id
-    );
-  });
+  document.querySelectorAll(".navitem").forEach(button =>
+    button.classList.toggle("active", button.dataset.go === id)
+  );
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
-function renderNumber(){const n=numbers[numberIndex];$("numberIndex").textContent=`LAMBA ${numberIndex+1} / ${numbers.length}`;$("kyangaWord").textContent=n.ky;$("hausaWord").textContent=n.ha;$("prevNumber").disabled=numberIndex===0;$("prevNumber").style.opacity=numberIndex===0?".45":"1";$("nextNumber").textContent=numberIndex===numbers.length-1?"Sake farawa ↻":"Na gaba →"}
-document.addEventListener("click",e=>{
- const go=e.target.closest("[data-go]");if(go)showPage(go.dataset.go);
- const fav=e.target.closest("[data-fav]");if(fav)toggleFav(fav.dataset.fav);
- const f=e.target.closest("[data-filter]");if(f){filter=f.dataset.filter;document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b===f));renderDictionary()}
-});
-$("searchInput").addEventListener("input",renderDictionary);
-$("clearSearch").onclick=()=>{$("searchInput").value="";renderDictionary();$("searchInput").focus()};
-function toggleTheme(){document.body.classList.toggle("dark");localStorage.setItem("lk-dark",document.body.classList.contains("dark"));updateThemeButtons()}
-function updateThemeButtons(){const d=document.body.classList.contains("dark");$("themeBtn").textContent=d?"☀":"☾";$("themeToggle").classList.toggle("on",d)}
-$("themeBtn").onclick=toggleTheme;$("themeToggle").onclick=toggleTheme;
-$("numbersLesson").onclick=()=>{numberIndex=0;renderNumber();showPage("numberLesson")};
-$("nextNumber").onclick=()=>{numberIndex=numberIndex===numbers.length-1?0:numberIndex+1;renderNumber()};
-$("prevNumber").onclick=()=>{numberIndex=Math.max(0,numberIndex-1);renderNumber()};
-$("restartNumbers").onclick=()=>{numberIndex=0;renderNumber()};
 
+function renderNumber() {
+  const n = numbers[numberIndex];
+
+  $("numberIndex").textContent =
+    `LAMBA ${numberIndex + 1} / ${numbers.length}`;
+  $("kyangaWord").textContent = n.ky;
+  $("hausaWord").textContent = n.ha;
+
+  $("prevNumber").disabled = numberIndex === 0;
+  $("prevNumber").style.opacity =
+    numberIndex === 0 ? ".45" : "1";
+
+  $("nextNumber").textContent =
+    numberIndex === numbers.length - 1
+      ? "Sake farawa ↻"
+      : "Na gaba →";
+}
+
+// Navigation and favorites
+document.addEventListener("click", e => {
+  const go = e.target.closest("[data-go]");
+  if (go) showPage(go.dataset.go);
+
+  const fav = e.target.closest("[data-fav]");
+  if (fav) toggleFav(fav.dataset.fav);
+
+  const f = e.target.closest("[data-filter]");
+  if (f) {
+    filter = f.dataset.filter;
+    document.querySelectorAll(".filter").forEach(b =>
+      b.classList.toggle("active", b === f)
+    );
+    renderDictionary();
+  }
+});
+
+$("searchInput").addEventListener("input", renderDictionary);
+
+$("clearSearch").onclick = () => {
+  $("searchInput").value = "";
+  renderDictionary();
+  $("searchInput").focus();
+};
+
+// Dark mode
+function updateThemeButtons() {
+  const d = document.body.classList.contains("dark");
+  $("themeBtn").textContent = d ? "☀" : "☾";
+  $("themeToggle").classList.toggle("on", d);
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+  localStorage.setItem(
+    "lk-dark",
+    document.body.classList.contains("dark")
+  );
+  updateThemeButtons();
+}
+
+if (localStorage.getItem("lk-dark") === "true") {
+  document.body.classList.add("dark");
+}
+
+$("themeBtn").onclick = toggleTheme;
+$("themeToggle").onclick = toggleTheme;
+updateThemeButtons();
+
+// Number lessons
+$("numbersLesson").onclick = () => {
+  numberIndex = 0;
+  renderNumber();
+  showPage("numberLesson");
+};
+
+$("nextNumber").onclick = () => {
+  numberIndex = numberIndex === numbers.length - 1
+    ? 0 : numberIndex + 1;
+  renderNumber();
+};
+
+$("prevNumber").onclick = () => {
+  numberIndex = Math.max(0, numberIndex - 1);
+  renderNumber();
+};
+
+$("restartNumbers").onclick = () => {
+  numberIndex = 0;
+  renderNumber();
+};
+
+// Premium dialog
 function openPremium() {
-  const dialog = document.getElementById("premiumDialog");
+  const dialog = $("premiumDialog");
 
   if (!dialog) {
-    console.error("Premium dialog not found in HTML.");
+    console.error("Premium dialog not found");
     return;
   }
 
-  dialog.showModal();
+  if (!dialog.open) dialog.showModal();
 }
 
-document.getElementById("premiumCourse").addEventListener("click", openPremium);
-/* Supabase Authentication */
+function closePremium() {
+  const dialog = $("premiumDialog");
+  if (dialog && dialog.open) dialog.close();
+}
+
+$("premiumCourse").onclick = openPremium;
+$("subscribeBtn").onclick = openPremium;
+$("closeDialog").onclick = closePremium;
+$("dialogOk").onclick = closePremium;
+
+// Supabase authentication
 (() => {
   const client = window.supabase;
   const url = window.SUPABASE_URL;
   const key = window.SUPABASE_PUBLISHABLE_KEY;
 
-  const form = document.getElementById("authForm");
- console.log("AUTH CODE STARTED");
-  const emailInput = document.getElementById("authEmail");
-  const passwordInput = document.getElementById("authPassword");
-  const message = document.getElementById("authMessage");
-  const submit = document.getElementById("authSubmit");
-  const loginBtn = document.getElementById("showLogin");
-  const signupBtn = document.getElementById("showSignup");
-  const signOutBtn = document.getElementById("signOutBtn");
+  const form = $("authForm");
+  const message = $("authMessage");
+  const submit = $("authSubmit");
+  const emailInput = $("authEmail");
+  const passwordInput = $("authPassword");
+  const loginBtn = $("showLogin");
+  const signupBtn = $("showSignup");
+  const signOutBtn = $("signOutBtn");
 
-  if (!form || !client || !url || !key) {
-   alert(
-  "Gwaji: form=" + !!form +
-  ", SDK=" + !!client +
-  ", URL=" + !!url +
-  ", key=" + !!key
-);
-    if (message) {
-      message.textContent =
-        "Ba a sami saitunan Supabase ba. Duba supabase-config.js.";
-    }
+  const payPremiumBtn = $("payPremiumBtn");
+  const paymentMessage = $("paymentMessage");
+
+  if (!client || !url || !key || !form) {
+    console.error("Supabase configuration missing");
+    message.textContent =
+      "Ba a samu saitunan Supabase ba. Duba supabase-config.js.";
     return;
   }
 
   const db = client.createClient(url, key);
- signupBtn.addEventListener("click", function () {
-  message.textContent = "An danna Sign up kuma JavaScript ya karɓi dannawar.";
-});
-  let mode = "login";
 
   function say(text) {
     message.textContent = text;
@@ -143,28 +305,28 @@ document.getElementById("premiumCourse").addEventListener("click", openPremium);
 
   function setMode(nextMode) {
     mode = nextMode;
-    submit.textContent = mode === "login" ? "Login" : "Ƙirƙiri asusu";
+    submit.textContent =
+      mode === "login" ? "Login" : "Ƙirƙiri asusu";
+
     passwordInput.autocomplete =
       mode === "login" ? "current-password" : "new-password";
+
+    loginBtn.classList.toggle("primary", mode === "login");
+    loginBtn.classList.toggle("outline", mode !== "login");
+
+    signupBtn.classList.toggle("primary", mode === "signup");
+    signupBtn.classList.toggle("outline", mode !== "signup");
+
     say("");
   }
 
-  loginBtn.onclick = function () {
-  mode = "login";
-  submit.textContent = "Login";
-  passwordInput.autocomplete = "current-password";
-  say("");
-};
+  loginBtn.onclick = () => setMode("login");
+  signupBtn.onclick = () => setMode("signup");
 
-signupBtn.onclick = function () {
-  mode = "signup";
-  submit.textContent = "Ƙirƙiri asusu";
-  passwordInput.autocomplete = "new-password";
-  say("Ka cika imel da kalmar sirri, sannan ka danna Ƙirƙiri asusu.");
-};
-
-  form.addEventListener("submit", async (event) => {
+  // Signup and login
+  form.addEventListener("submit", async event => {
     event.preventDefault();
+
     submit.disabled = true;
     say("Ana jira...");
 
@@ -173,114 +335,146 @@ signupBtn.onclick = function () {
       const password = passwordInput.value;
 
       if (mode === "signup") {
-        const { error } = await db.auth.signUp({ email, password });
+        const { error } = await db.auth.signUp({
+          email,
+          password
+        });
+
         if (error) throw error;
 
-        say("An aika maka imel na tabbatarwa idan an kunna email confirmation.");
+        say("An aika maka imel na tabbatarwa. Ka duba akwatin imel ɗinka.");
       } else {
         const { error } = await db.auth.signInWithPassword({
           email,
           password
         });
+
         if (error) throw error;
 
         say("Ka shiga asusunka cikin nasara.");
       }
 
       await updateAuthState();
+
     } catch (error) {
-      say(error.message || "An samu matsala. Ka sake gwadawa.");
+      console.error("Authentication error:", error);
+      say(error.message || "An samu matsala. A sake gwadawa.");
     } finally {
       submit.disabled = false;
     }
   });
 
+  // Update account status
   async function updateAuthState() {
-   
-  // Paystack Premium payment
-  const payPremiumBtn = document.getElementById("payPremiumBtn");
-  const paymentMessage = document.getElementById("paymentMessage");
+    try {
+      const { data, error } = await db.auth.getSession();
 
-  if (payPremiumBtn) {
-    payPremiumBtn.addEventListener("click", async () => {
-      payPremiumBtn.disabled = true;
+      if (error) throw error;
 
-      try {
-        if (paymentMessage) {
-          paymentMessage.textContent = "Ana shirya biyan kuɗi...";
-        }
+      const user = data.session?.user;
 
-        const { data: sessionData, error: sessionError } =
-          await db.auth.getSession();
+      signOutBtn.classList.toggle("hidden", !user);
 
-        if (sessionError) throw sessionError;
-
-        if (!sessionData.session) {
-          if (paymentMessage) {
-            paymentMessage.textContent =
-              "Da fatan za ka shiga asusunka kafin biyan kuɗi.";
-          }
-          return;
-        }
-
-        const { data, error } = await db.functions.invoke(
-          "initialize-paystack",
-          { body: {} }
-        );
-
-        if (error) throw error;
-
-        if (
-          !data ||
-          typeof data.authorization_url !== "string" ||
-          !data.authorization_url.startsWith("https://checkout.paystack.com/")
-        ) {
-          throw new Error(
-            data?.error || "Ba a samu hanyar biyan kuɗi ba."
-          );
-        }
-
-        window.location.assign(data.authorization_url);
-      } catch (error) {
-        console.error("Premium payment error:", error);
-
-        if (paymentMessage) {
-          paymentMessage.textContent =
-            error.message || "An samu matsala. A sake gwadawa.";
-        }
-      } finally {
-        payPremiumBtn.disabled = false;
+      if (user) {
+        say("An shiga: " + user.email);
       }
-    });
-  }
-   
-    const { data } = await db.auth.getSession();
-    const user = data.session?.user;
 
-    signOutBtn.classList.toggle("hidden", !user);
-    if (user) {
-      say("An shiga: " + user.email);
+    } catch (error) {
+      console.error("Session error:", error);
     }
   }
 
-  signOutBtn.addEventListener("click", async () => {
-    const { error } = await db.auth.signOut();
-    if (error) {
-      say(error.message);
-      return;
+  // Sign out
+  signOutBtn.onclick = async () => {
+    signOutBtn.disabled = true;
+
+    try {
+      const { error } = await db.auth.signOut();
+      if (error) throw error;
+
+      say("Ka fita daga asusunka.");
+
+      if (paymentMessage) {
+        paymentMessage.textContent = "Ka shiga asusunka kafin biyan kuɗi.";
+      }
+
+      await updateAuthState();
+
+    } catch (error) {
+      say(error.message || "An samu matsala.");
+    } finally {
+      signOutBtn.disabled = false;
     }
-    say("Ka fita daga asusunka.");
-    await updateAuthState();
+  };
+
+  // PAYSTACK: Attach listener ONCE, outside updateAuthState
+  payPremiumBtn.addEventListener("click", async () => {
+    payPremiumBtn.disabled = true;
+    paymentMessage.textContent = "Ana shirya biyan kuɗi...";
+
+    try {
+      const { data: sessionData, error: sessionError } =
+        await db.auth.getSession();
+
+      if (sessionError) throw sessionError;
+
+      if (!sessionData.session) {
+        paymentMessage.textContent =
+          "Da fatan za ka shiga asusunka kafin biyan kuɗi.";
+        return;
+      }
+
+      const { data, error } = await db.functions.invoke(
+        "initialize-paystack",
+        { body: {} }
+      );
+
+      if (error) {
+        console.error("Paystack function error:", error);
+        throw new Error(
+          error.message || "An kasa haɗawa da Paystack."
+        );
+      }
+
+      if (
+        !data ||
+        typeof data.authorization_url !== "string" ||
+        !data.authorization_url.startsWith(
+          "https://checkout.paystack.com/"
+        )
+      ) {
+        throw new Error(
+          data?.error || "Ba a samu hanyar biyan kuɗi ba."
+        );
+      }
+
+      paymentMessage.textContent =
+        "Ana kai ka shafin biyan kuɗi...";
+
+      window.location.assign(data.authorization_url);
+
+    } catch (error) {
+      console.error("Premium payment error:", error);
+
+      paymentMessage.textContent =
+        error.message || "An samu matsala. A sake gwadawa.";
+
+    } finally {
+      payPremiumBtn.disabled = false;
+    }
   });
 
+  // Listen for login/logout changes
   db.auth.onAuthStateChange(() => {
     updateAuthState();
   });
 
   updateAuthState();
+
 })();
-console.log("Learning Kyangaize app.js loaded");
-console.log("Supabase SDK:", typeof window.supabase);
-console.log("Supabase URL:", window.SUPABASE_URL ? "Found" : "Missing");
-console.log("Supabase key:", window.SUPABASE_PUBLISHABLE_KEY ? "Found" : "Missing");
-console.log("Signup form:", document.getElementById("authForm") ? "Found" : "Missing");
+
+// Start application
+renderAll();
+renderNumber();
+
+console.log("Learning Kyangaize app.js loaded successfully");
