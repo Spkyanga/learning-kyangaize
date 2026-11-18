@@ -101,7 +101,7 @@ function openPremium() {
   } else {
     console.error("Your browser does not support HTML dialog.");
   }
-}
+document.getElementById("premiumCourse").addEventListener("click", openPremium);}
 /* Supabase Authentication */
 (() => {
   const client = window.supabase;
